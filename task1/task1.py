@@ -1,5 +1,9 @@
-n1, m1, n2, m2 = map(int, input().split())
-print(n1, m1, n2, m2)
+import sys
+
+n1 = int(sys.argv[1])
+m1 = int(sys.argv[2])
+n2 = int(sys.argv[3])
+m2 = int(sys.argv[4])
 
 stroke1 = "1"
 stroke2 = "1"
@@ -10,6 +14,11 @@ last1 = m1
 last2 = m2
 end1 = False
 end2 = False
+
+if m1 == 1:
+    end1 = True
+if m2 == 1:
+    end2 = True
 
 while not end1 or not end2:
     if last1 != 1:

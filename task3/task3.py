@@ -1,5 +1,22 @@
 from pydantic import BaseModel
 import json
+import argparse
+
+parser = argparse.ArgumentParser(
+        description='Обработка json'
+)
+parser.add_argument(
+    'tests',
+    help='Производимые тесты'
+)
+parser.add_argument(
+    'values',
+    help='Результаты тестов'
+)
+parser.add_argument(
+    'report',
+    help='Объединение'
+)
 
 
 class TestValues(BaseModel):
@@ -32,16 +49,13 @@ def update_test_value(id, val, val_lst):
 
 TestNode.model_rebuild()
 TestValues.model_rebuild()
+args = parser.parse_args()
 
-tests_path = input("Введите путь к файлу с тестами ")
-values_path = input("Введите путь к файлу с результатами тестов ")
-report_path = input("Введите путь сохранения тестов и их результатов ")
-
-tests_root = Root.model_validate(json.loads(open(tests_path).read()))
-values_root = RootValue.model_validate(json.loads(open(values_path).read()))
+tests_root = Root.model_validate(json.loads(open(args.tests).read()))
+values_root = RootValue.model_validate(json.loads(open(args.values).read()))
 
 for i in values_root.values:
     update_test_value(i.id, i.value, tests_root.tests)
 
-with open(report_path, "w", encoding="utf-8") as f:
+with open(args.report, "w", encoding="utf-8") as f:
     json.dump(tests_root.model_dump(exclude_unset=True, exclude_none=False), f, ensure_ascii=False, indent=2)
